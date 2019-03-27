@@ -1,0 +1,248 @@
+<div nz-row nzAlign="top">
+  <div nz-col nzSpan="24">
+    <div nz-row nzGutter="20" nzJustify="start">
+      <div nz-col nzSpan="3" style="height: 39px;line-height: 39px;">
+        <button nz-button nzType="primary" (click)="showModal()">
+          新增上架
+        </button>
+      </div>
+      <div nz-col nzSpan="21">
+        <form nz-form [formGroup]="validateFormFilter">
+          <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="loanMarketKey"
+                  >贷超</nz-form-label
+                >
+                <nz-form-control [nzSpan]="19">
+                  <nz-select
+                    id="loanMarketKey"
+                    formControlName="loanMarketKey"
+                    nzPlaceHolder="选择要查看的贷超"
+                    (ngModelChange)="handleFilter($event)"
+                  >
+                    <nz-option
+                      *ngFor="let item of loadListArr"
+                      [nzValue]="item.key"
+                      [nzLabel]="item.value"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="appCode">app</nz-form-label>
+                <nz-form-control [nzSpan]="19">
+                  <nz-select
+                    id="appCode"
+                    formControlName="appCode"
+                    nzPlaceHolder="选择要查看的app"
+                    (ngModelChange)="handleFilter($event)"
+                  >
+                    <nz-option
+                      *ngFor="let item of appListArr"
+                      [nzValue]="item.key"
+                      [nzLabel]="item.value"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <nz-divider nzType="horizontal"></nz-divider>
+  <div nz-col nzSpan="24">
+    <nz-table
+      #basicTable
+      nzBordered
+      nzFrontPagination="false"
+      [nzData]="dataSet"
+      nzShowPagination="false"
+    >
+      <thead>
+        <tr>
+          <th>配置唯一Key</th>
+          <th>贷超Key</th>
+          <th>贷超名称</th>
+          <th>AppCode</th>
+          <th>App名称</th>
+          <th>贷超json</th>
+          <th>贷超类型</th>
+          <th>单日进件上限</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.key }}</td>
+          <td>{{ data.loanMarketKey }}</td>
+          <td>{{ data.loanMarketName }}</td>
+          <td>{{ data.appCode }}</td>
+          <td>{{ data.appName }}</td>
+          <td>
+            <textarea
+              nz-input
+              class="json-show"
+              nzAutosize
+              readonly
+              [ngModel]="data.loanMarketConfig.trim()"
+            ></textarea>
+          </td>
+          <td>{{ data.loanMarketType }}</td>
+          <td>{{ data.orderMax }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="新增 APP"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+  nzMaskClosable="false"
+  (nzAfterClose)="afterModalCloseHandle()"
+>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="loanMarketKey" nzRequired
+        >贷超</nz-form-label
+      >
+      <nz-form-control [nzSpan]="14">
+        <nz-select
+          id="loanMarketKey"
+          formControlName="loanMarketKey"
+          nzPlaceHolder="请选择贷超"
+        >
+          <nz-option
+            *ngFor="let item of loadListArr.slice(1)"
+            [nzValue]="item.key"
+            [nzLabel]="item.value"
+          ></nz-option>
+        </nz-select>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('loanMarketKey').dirty &&
+            validateForm.get('loanMarketKey').errors
+          "
+          >贷超必选</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="loanMarketType" nzRequired
+        >贷超类型</nz-form-label
+      >
+      <nz-form-control [nzSpan]="14">
+        <nz-select
+          id="loanMarketType"
+          formControlName="loanMarketType"
+          nzPlaceHolder="请选择贷超类型"
+        >
+          <nz-option
+            *ngFor="let item of loadTypeListArr.slice(1)"
+            [nzValue]="item.key"
+            [nzLabel]="item.value"
+          ></nz-option>
+        </nz-select>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('loanMarketType').dirty &&
+            validateForm.get('loanMarketType').errors
+          "
+          >贷超类型必选</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="appCode" nzRequired>app</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <nz-select
+          id="appCode"
+          formControlName="appCode"
+          nzPlaceHolder="请选择app"
+        >
+          <nz-option
+            *ngFor="let item of appListArr.slice(1)"
+            [nzValue]="item.key"
+            [nzLabel]="item.value"
+          ></nz-option>
+        </nz-select>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('appCode').dirty &&
+            validateForm.get('appCode').errors
+          "
+          >app必选</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="loanMarketConfig"
+        >贷超json</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <textarea
+          nz-input
+          placeholder="123"
+          formControlName="loanMarketConfig"
+          id="loanMarketConfig"
+          [nzAutosize]="{ minRows: 2 }"
+          placeholder="请输入贷超json"
+        ></textarea>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('loanMarketConfig').dirty &&
+            validateForm.get('loanMarketConfig').errors
+          "
+          >贷超json必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="orderMax"
+        >单日进件上限</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input
+          nz-input
+          formControlName="orderMax"
+          id="orderMax"
+          placeholder="请输入单日进件上限"
+        />
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('orderMax').dirty &&
+            validateForm.get('orderMax').errors
+          "
+          >单日进件上限必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="channelCode"
+        >channelCode</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input
+          nz-input
+          formControlName="channelCode"
+          id="channelCode"
+          placeholder="channelCode选填"
+        />
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('channelCode').dirty &&
+            validateForm.get('channelCode').errors
+          "
+          >channelCode</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

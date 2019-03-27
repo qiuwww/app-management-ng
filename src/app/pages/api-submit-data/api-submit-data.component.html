@@ -1,0 +1,117 @@
+<div nz-row nzAlign="top">
+  <div nz-col nzSpan="24">
+    <div nz-row nzGutter="20" nzJustify="start">
+      <div nz-col nzSpan="21">
+        <form nz-form [formGroup]="validateFormFilter">
+          <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="loanMarketKey"
+                  >贷超</nz-form-label
+                >
+                <nz-form-control [nzSpan]="19">
+                  <nz-select
+                    id="loanMarketKey"
+                    nzShowSearch
+                    formControlName="loanMarketKey"
+                    nzPlaceHolder="选择要查看的贷超"
+                    (ngModelChange)="handleFilter()"
+                  >
+                    <nz-option
+                      *ngFor="let item of loadListArr"
+                      [nzValue]="item.key"
+                      [nzLabel]="item.value"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="appCode">app</nz-form-label>
+                <nz-form-control [nzSpan]="19">
+                  <nz-select
+                    id="appCode"
+                    nzShowSearch
+                    formControlName="appCode"
+                    nzPlaceHolder="选择要查看的app"
+                    (ngModelChange)="handleFilter()"
+                  >
+                    <nz-option
+                      *ngFor="let item of appListArr"
+                      [nzValue]="item.key"
+                      [nzLabel]="item.value"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="dateRange"
+                  >日期</nz-form-label
+                >
+                <nz-form-control [nzSpan]="19">
+                  <nz-range-picker
+                    id="dateRange"
+                    nzFormat="yyyy-MM-dd"
+                    formControlName="dateRange"
+                    (ngModelChange)="handleFilter()"
+                  >
+                  </nz-range-picker>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <nz-divider nzType="horizontal"></nz-divider>
+  <div nz-col nzSpan="24">
+    <nz-table
+      #basicTable
+      nzBordered
+      [nzLoading]="showLoading"
+      nzShowQuickJumper="true"
+      nzShowSizeChanger="true"
+      [nzData]="dataSet"
+      nzPageSize="20"
+      (nzPageIndexChange)="refreshStatus()"
+      (nzPageSizeChange)="refreshStatus()"
+    >
+      <thead>
+        <tr>
+          <th>APP</th>
+          <th>贷超</th>
+          <th>进件数</th>
+          <th>审核通过</th>
+          <th>审核拒绝</th>
+          <th>支付服务费</th>
+          <th>放款成功</th>
+          <th>放款金额</th>
+          <th>审核通过率</th>
+          <th>审核通过放款率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.appName }}</td>
+          <td>{{ data.loanMarketName }}</td>
+          <td>{{ data.submitCount }}</td>
+          <td>{{ data.auditPassCount }}</td>
+          <td>{{ data.auditRefuseCount }}</td>
+          <td>{{ data.signCharge }}</td>
+          <td>{{ data.loanSuccess }}</td>
+          <td>{{ data.loanCapital }}</td>
+          <td>
+            {{ (data.auditPassCount / data.submitCount || 0).toFixed(2) }}
+          </td>
+          <td>
+            {{ (data.loanSuccess / data.auditPassCount || 0).toFixed(2) }}
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

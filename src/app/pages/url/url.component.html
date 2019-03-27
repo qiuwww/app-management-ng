@@ -1,0 +1,150 @@
+<div nz-row nzAlign="top">
+  <div nz-col nzSpan="24">
+    <div nz-row nzGutter="20" nzJustify="start">
+      <div nz-col nzSpan="3" style="height: 39px;line-height: 39px;">
+        <button nz-button nzType="primary" (click)="showModal()">
+          新增上架
+        </button>
+      </div>
+      <div nz-col nzSpan="21">
+        <form nz-form [formGroup]="validateFormFilter">
+          <div nz-row [nzGutter]="24">
+            <div nz-col [nzSpan]="8">
+              <nz-form-item>
+                <nz-form-label [nzSpan]="5" nzFor="loanMarketKey"
+                  >贷超</nz-form-label
+                >
+                <nz-form-control [nzSpan]="19">
+                  <nz-select
+                    id="loanMarketKey"
+                    formControlName="loanMarketKey"
+                    nzPlaceHolder="选择要查看的贷超"
+                    (ngModelChange)="handleFilter()"
+                  >
+                    <nz-option
+                      *ngFor="let item of loadListArr"
+                      [nzValue]="item.key"
+                      [nzLabel]="item.value"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <nz-divider nzType="horizontal"></nz-divider>
+  <div nz-col nzSpan="24">
+    <nz-table
+      #basicTable
+      nzBordered
+      nzFrontPagination="false"
+      [nzData]="dataSet"
+      nzShowPagination="false"
+    >
+      <thead>
+        <tr>
+          <th>唯一Key</th>
+          <th>键值URL</th>
+          <th>映射URL</th>
+          <th>贷超名称</th>
+          <th>适配方法名</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.key }}</td>
+          <td>{{ data.keyUrl }}</td>
+          <td>{{ data.valueUrl }}</td>
+          <td>{{ data.loanMarketName }}</td>
+          <td>{{ data.adapterMethod }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="新增 APP"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+  nzMaskClosable="false"
+  (nzAfterClose)="afterModalCloseHandle()"
+>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="loanMarketKey" nzRequired
+        >贷超</nz-form-label
+      >
+      <nz-form-control [nzSpan]="14">
+        <nz-select
+          id="loanMarketKey"
+          formControlName="loanMarketKey"
+          nzPlaceHolder="请选择贷超"
+        >
+          <nz-option
+            *ngFor="let item of loadListArr.slice(1)"
+            [nzValue]="item.key"
+            [nzLabel]="item.value"
+          ></nz-option>
+        </nz-select>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('loanMarketKey').dirty &&
+            validateForm.get('loanMarketKey').errors
+          "
+          >贷超必选</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="keyUrl"
+        >键值URL</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="keyUrl" id="keyUrl" placeholder="请输入键值URL"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('keyUrl').dirty &&
+            validateForm.get('keyUrl').errors
+          "
+          >键值URL必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="valueUrl"
+        >映射URL</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="valueUrl" id="valueUrl" placeholder="请输入映射URL"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('valueUrl').dirty &&
+            validateForm.get('valueUrl').errors
+          "
+          >映射URL必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="adapterMethod"
+        >适配方法名</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="adapterMethod" id="adapterMethod" placeholder="请输入适配方法名"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('adapterMethod').dirty &&
+            validateForm.get('adapterMethod').errors
+          "
+          >适配方法名必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

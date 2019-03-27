@@ -1,0 +1,94 @@
+<div nz-row nzAlign="top">
+  <div nz-col nzSpan="24">
+    <div nz-row nzGutter="20" nzJustify="start" style="margin-bottom: 24px;">
+      <div nz-col nzSpan="6" style="height: 39px;line-height: 39px;">
+        <button nz-button nzType="primary" (click)="showModal()">
+          新增App
+        </button>
+      </div>
+    </div>
+  </div>
+  <nz-divider nzType="horizontal"></nz-divider>
+  <div nz-col nzSpan="24">
+    <nz-table
+      #basicTable
+      nzBordered
+      [nzData]="dataSet"
+      nzFrontPagination="false"
+      nzShowPagination="false"
+    >
+      <thead>
+        <tr>
+          <th>App码</th>
+          <th>App名称</th>
+          <th>App URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.appCode }}</td>
+          <td>{{ data.appName }}</td>
+          <td>{{ data.appUrl }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="新增 APP"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading"
+  nzMaskClosable="false"
+  (nzAfterClose)="afterModalCloseHandle()"
+>
+  <form nz-form [formGroup]="validateForm">
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="appCode"
+        >App码</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="appCode" id="appCode" placeholder="请输入App码"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('appCode').dirty &&
+            validateForm.get('appCode').errors
+          "
+          >App码必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="appName"
+        >App名称</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="appName" id="appName" placeholder="请输入App名称"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('appName').dirty &&
+            validateForm.get('appName').errors
+          "
+          >App名称必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="appUrl"
+        >App URL</nz-form-label
+      >
+      <nz-form-control [nzSm]="14" [nzXs]="24">
+        <input nz-input formControlName="appUrl" id="appUrl" placeholder="请输入App URL"/>
+        <nz-form-explain
+          *ngIf="
+            validateForm.get('appUrl').dirty &&
+            validateForm.get('appUrl').errors
+          "
+          >App URL必填</nz-form-explain
+        >
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

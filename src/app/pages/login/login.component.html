@@ -1,0 +1,60 @@
+<div class="full-screen page-content">
+  <div class="wrapper">
+    <img class="logo-img" src="./assets/img/flower.jpeg" alt="" />
+    <div class="text-wrapper">
+      <h1 class="title-text">
+        系统登陆
+      </h1>
+    </div>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired
+          >手机号</nz-form-label
+        >
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input
+            nz-input
+            type="phoneNumber"
+            id="phoneNumber"
+            formControlName="phoneNumber"
+          />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('phoneNumber').dirty &&
+              validateForm.get('phoneNumber').errors
+            "
+            >请输入你的账户!</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired
+          >密码</nz-form-label
+        >
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input
+            nz-input
+            type="password"
+            id="password"
+            formControlName="password"
+          />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('password').dirty &&
+              validateForm.get('password').errors
+            "
+            >请输入你的密码!</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style="margin-bottom:8px;">
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary">登陆</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <div class="copy-right">
+      Copyright © 2018 beitukeji
+    </div>
+  </div>
+</div>
